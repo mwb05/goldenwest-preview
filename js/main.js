@@ -168,8 +168,9 @@
     });
   })();
 
-  /* ---------- reviews wall: page, filter by store ---------- */
-  // Without JS every review simply shows in full; this only tidies the wall up.
+  /* ---------- reviews wall: page, filter by store, truncate long reviews ---------- */
+  // Cards are a fixed height; a review too long for its card is cut to the lines that fit
+  // and gets a "Read more" toggle that opens the full text in place.
   (function reviews() {
     var section = document.querySelector('.reviews');
     if (!section) return;
@@ -183,14 +184,57 @@
     var pageSize = mqMobile.matches ? 4 : 9;
     var shown = pageSize;
 
+    function toggleFor(card) {
+      var b = card.querySelector('.review-toggle');
+      if (b) return b;
+      b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'review-toggle';
+      b.textContent = 'Read more';
+      b.setAttribute('aria-expanded', 'false');
+      b.hidden = true;
+      b.addEventListener('click', function () {
+        var open = card.classList.toggle('is-open');
+        b.textContent = open ? 'Read less' : 'Read more';
+        b.setAttribute('aria-expanded', String(open));
+      });
+      card.querySelector('p').insertAdjacentElement('afterend', b);
+      return b;
+    }
+
+    // Measure only visible, collapsed cards (hidden ones have no layout to measure).
+    function truncate(card) {
+      if (card.hidden || card.classList.contains('is-open')) return;
+      var p = card.querySelector('p');
+      var b = card.querySelector('.review-toggle');
+      card.classList.remove('has-toggle');
+      p.style.webkitLineClamp = '';
+      if (b) b.hidden = true;
+      if (p.scrollHeight <= p.clientHeight + 1) return;
+      b = toggleFor(card);
+      b.hidden = false;
+      card.classList.add('has-toggle');
+      var lh = parseFloat(getComputedStyle(p).lineHeight) || 24;
+      p.style.webkitLineClamp = String(Math.max(1, Math.floor((p.clientHeight + 1) / lh)));
+    }
+
     function render() {
       var loc = select ? select.value : '';
       var matches = cards.filter(function (c) { return !loc || c.getAttribute('data-loc') === loc; });
       cards.forEach(function (c) { c.hidden = true; });
       matches.forEach(function (c, i) { c.hidden = i >= shown; });
+      cards.forEach(truncate);
       var visible = Math.min(shown, matches.length);
       if (more) more.hidden = visible >= matches.length;
     }
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { cards.forEach(truncate); }, 150);
+    });
+    // Web fonts change line metrics; re-measure once they land.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { cards.forEach(truncate); });
 
     if (tools) tools.hidden = false;
     if (select) select.addEventListener('change', function () { shown = pageSize; render(); });

@@ -337,7 +337,16 @@ p { margin: 0; }
 .review-grid { align-items: stretch; }
 .review[hidden] { display: none; }
 .review { height: 26rem; grid-template-rows: auto minmax(0, 1fr) auto; }
-.review p { overflow-wrap: anywhere; overflow-y: auto; margin: 0; }
+.review p { overflow-wrap: anywhere; overflow: hidden; margin: 0; }
+/* Long reviews: main.js clamps the text to the lines that fit and adds a Read more toggle.
+   Opening one lets that card grow to the full review; closed cards keep the uniform height. */
+.review.has-toggle { grid-template-rows: auto minmax(0, 1fr) auto auto; }
+.review.has-toggle:not(.is-open) p { display: -webkit-box; -webkit-box-orient: vertical; }
+.review.is-open { height: auto; min-height: 26rem; }
+.review.is-open p { -webkit-line-clamp: unset !important; overflow: visible; }
+.review-toggle { justify-self: start; background: none; border: 0; padding: 0; font-family: var(--head); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--red-on-dark); cursor: pointer; }
+.review-toggle:hover { color: var(--white); }
+.review-toggle[hidden] { display: none; }
 .review figcaption { display: grid; gap: .3rem; margin-top: auto; }
 .review-loc { color: var(--white); }
 .review-loc:hover { color: var(--red-on-dark); }
