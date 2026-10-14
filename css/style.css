@@ -325,6 +325,29 @@ p { margin: 0; }
 .quote p { font-size: 1rem; line-height: 1.55; }
 .quote figcaption { font-family: var(--head); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--grey); }
 
+/* The full Google reviews wall: every card is in the HTML; main.js pages and filters it. */
+.review-stats { list-style: none; margin: 0 auto clamp(1.6rem, 3vw, 2.4rem); padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.review-stats li { border: 1px solid var(--line-strong); background: var(--road-2); padding: .65rem 1.1rem; font-family: var(--head); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--grey); }
+.review-stats strong { color: var(--signal); font-size: 1.2rem; font-weight: 600; letter-spacing: .02em; margin-right: .4rem; }
+.review-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .6rem 1rem; margin-bottom: 1.2rem; }
+.review-tools[hidden] { display: none; }
+.review-tools label { font-family: var(--head); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--grey); }
+.review-tools select { font: inherit; color: var(--white); background: var(--road-2); border: 2px solid var(--line-strong); padding: .55rem 2.2rem .55rem .8rem; cursor: pointer; }
+.review-tools select:hover { border-color: var(--red); }
+.review-count { width: 100%; text-align: center; font-size: .85rem; color: var(--grey); }
+.review-grid { align-items: start; }
+.review[hidden] { display: none; }
+.review p { overflow-wrap: anywhere; }
+.review.is-clamped p { display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+.review-toggle { justify-self: start; background: none; border: 0; padding: 0; font-family: var(--head); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--red-on-dark); cursor: pointer; }
+.review-toggle:hover { color: var(--white); }
+.review figcaption { display: grid; gap: .3rem; }
+.review-loc { color: var(--white); }
+.review-loc:hover { color: var(--red-on-dark); }
+.review-more { justify-content: center; margin-top: 1.6rem; }
+.review-more[hidden] { display: none; }
+.review-source { text-align: center; font-size: .82rem; color: var(--grey-2); margin-top: 1.2rem; }
+
 /* ---------- split ---------- */
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.6rem, 4vw, 4rem); align-items: center; }
 .split > * { min-width: 0; }
